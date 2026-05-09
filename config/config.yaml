@@ -1,0 +1,113 @@
+# AI Agent配置文件
+
+# LLM配置
+llm:
+  provider: "openai"  # openai, claude, qwen
+  model: "gpt-4-turbo-preview"
+  api_key: "${OPENAI_API_KEY}"
+  temperature: 0.7
+  max_tokens: 2000
+
+# Agent配置
+agent:
+  max_iterations: 15  # 最大迭代次数
+  timeout: 300  # 超时时间（秒）
+  verbose: true  # 详细输出
+  
+# ReAct配置
+react:
+  prompt_template: "config/prompts/react_prompt.txt"
+  
+# 规划器配置
+planner:
+  enabled: true  # 是否启用任务规划
+  max_subtasks: 10  # 最大子任务数
+  
+# 反思器配置
+reflector:
+  enabled: true  # 是否启用反思
+  max_retries: 3  # 最大重试次数
+  
+# 工具配置
+tools:
+  enabled_tools:
+    - search_web
+    - search_files
+    - read_file
+    - write_file
+    - execute_code
+    - analyze_data
+    - query_database
+    - call_api
+    - send_email
+  
+  # 代码执行配置
+  code_execution:
+    timeout: 60  # 代码执行超时（秒）
+    max_output_length: 10000  # 最大输出长度
+    sandbox: true  # 是否使用沙箱
+  
+  # 搜索配置
+  search:
+    engine: "duckduckgo"  # duckduckgo, google, bing
+    max_results: 5
+  
+  # 文件操作配置
+  file:
+    allowed_extensions:
+      - .txt
+      - .csv
+      - .xlsx
+      - .json
+      - .pdf
+      - .docx
+    max_file_size: 10485760  # 10MB
+
+# 记忆配置
+memory:
+  short_term:
+    max_history: 10  # 最大对话历史轮数
+    max_tokens: 4000  # 最大token数
+  
+  long_term:
+    enabled: true
+    vector_db: "milvus"
+    collection_name: "agent_memory"
+    embedding_model: "text2vec-base-chinese"
+
+# 数据库配置
+database:
+  redis:
+    host: "localhost"
+    port: 6379
+    db: 0
+  
+  milvus:
+    host: "localhost"
+    port: 19530
+
+# 工作空间配置
+workspace:
+  root: "data/workspace"
+  temp_dir: "data/workspace/temp"
+
+# 日志配置
+logging:
+  level: "INFO"
+  file: "logs/agent.log"
+  rotation: "10 MB"
+
+# 安全配置
+security:
+  # 敏感操作需要确认
+  require_confirmation:
+    - write_file
+    - execute_code
+    - send_email
+    - call_api
+  
+  # 禁止访问的路径
+  blocked_paths:
+    - /etc
+    - /root
+    - ~/.ssh
